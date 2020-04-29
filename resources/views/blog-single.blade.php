@@ -12,7 +12,7 @@
 			<div class="main col-sm-8">
 				<article class="post-box list-single mb30">
 					<div class="img-box">
-						<img src="{{$post['banner_path']??''}}" alt="">
+						<img src="{{asset('storage/'.$post['banner_path'])}}" alt="">
 						<span class="comment-num">
 							<span>
 								{{-- {{$commentsNum}} --}}
@@ -28,7 +28,7 @@
 						<h2 class="entry-title">{{$post['title']}}</h2>
 						<p class="lead">{{$post['lead']??""}}</p>
 						<p class="small">
-							<i class="fa fa-calendar-o fa-fw"></i> {{$post['created_at']}}
+							<i class="fa fa-calendar-o fa-fw"></i> {{verta($post['created_at'])}}
 							{{-- <a href="{{$urls['list'].'?author='.$author['id']}}"
 							class="author">{{$author['name'].' '.$author['family']}}
 							</a> --}}
@@ -47,34 +47,45 @@
 				</article>
 				<!--/.post-box-->
 
-				{{-- @if (!($nocomments ?? false))
-				<!--Comments Form-->
-				@component('components.comment-form')
-				@slot('cmSubmit')
-				{{$urls['submitcm']}}
-				@endslot
-				@slot('postId')
-				{{$post['id']}}
-				@endslot
-				@endcomponent --}}
-				<!--/.widget-->
-				{{-- <hr class="clearfix mt30 mb30">
-				<!--Posted Comments-->
-				<section id="comments-section">
-					@csrf
-					<div>
-						<button type="button" id="loadmore_btn" class="btn btn-light btn-block">
-							بیشتر
-						</button>
-					</div>
-				</section>
-				<!--Posted Comments-->
-				@endif --}}
+				@auth
+				<div class="widget">
+					<h4 class="comments-title">ارسال نظر:</h4>
+					<form id="comment_form" action="{{route('comment.store')}}" method="POST">
+						@csrf
+						<input type="hidden" name="post_id" value="{{$post['id']}}">
+
+						<div class="form-group">
+
+							<textarea id="comment_textarea" name='body' class="form-control comments-dark" rows="3"
+								placeholder="نظر شما..." style="direction: rtl">{{old('body')}}</textarea>
+						</div>
+						<button type="submit" class="btn btn-primary">ثبت</button>
+					</form>
+				</div>
+				@endauth
+
+							<!--Posted Comments-->
+			@foreach ($post['comments'] as $comment)
+			<div class="media">
+				<div class="pull-right" href="#">
+					<img class="media-object" src="https://api.adorable.io/avatars/112/abott@adorable.png" alt="avatar">
+				</div>
+				<div class="media-body">
+					<h4 class="media-heading">{{$comment['sender']}}
+						<small>{{verta($comment['created_at'])}}</small>
+					</h4>
+					{{$comment['body']}}
+				</div>
+			</div>
+			@endforeach
+			<!--Posted Comments-->
 
 			</div>
+
+
 			<!-- RIGHT SIDEBAR -->
-			{{-- @component('components.right_sidebar')
-			@endcomponent --}}
+			@component('components.right_sidebar')
+			@endcomponent
 			<!-- right sidebar -->
 		</div>
 		<!--/.row-->
@@ -93,23 +104,32 @@
 <script src="{{asset('startrap/js/jquery.min.js')}}" type="text/javascript"></script>
 <!--Bootstrap Core JavaScript-->
 <script src="{{asset('startrap/bootstrap/js/bootstrap.min.js')}}" type="text/javascript"></script>
-<!--Parallax Background-->
-{{-- <script src="js/jquery.stellar.min.js" type="text/javascript"></script> --}}
-<!--Waypoints-->
-{{-- <script src="js/waypoints.min.js" type="text/javascript"></script> --}}
-<!--Circle Charts-->
-{{-- <script src="js/easypiechart.js" type="text/javascript"></script> --}}
-<!--Slick Carousel-->
-{{-- <script src="js/slick.min.js" type="text/javascript"></script> --}}
-<!--Animation-->
-{{-- <script src="js/wow.min.js" type="text/javascript"></script> --}}
-<!--Contact form-->
-{{-- <script src="js/jquery.validate.js" type="text/javascript"></script> --}}
-<!--Custom Scripts-->
-{{-- <script src="js/scripts.js" type="text/javascript"></script> --}}
 
 <script>
-
+$(function(){
+	$('#comment_form').submit(function(e){
+			e.preventDefault();
+			var form=$(this);
+			var post_url = form.attr('action');
+			var post_data = form.serialize();
+			console.log(post_data);
+			$.ajax({
+				type: 'POST',
+				url: post_url,
+				data: post_data,
+				success: function(response){
+					console.log(response);
+					if (response.success){
+						$($('#comment_form').parent()).append(
+							"<div class='text-center'><p class='text-success'>"+
+								"<b>نظر شما ثبت شد<b></p></div>"
+						);
+						$('#comment_form').remove();
+					}
+				}
+			});
+		})
+})
 </script>
 
 @endsection

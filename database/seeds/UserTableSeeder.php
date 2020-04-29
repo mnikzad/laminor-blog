@@ -14,9 +14,12 @@ class UserTableSeeder extends Seeder
 		if (!\App\User::count()) {
 			factory(\App\User::class, 5)->create()->each(function ($user) {
 				$user->posts()->saveMany(factory(\App\Post::class, 5)->make());
+				$user->roles()->save(\App\Role::where('name','admin')->first());
 			});
 
-			factory(\App\User::class, 20)->create();
+			factory(\App\User::class, 20)->create()->each(function ($user){
+				$user->roles()->save(\App\Role::where('name','user')->first());
+			});
 		}
 	}
 }

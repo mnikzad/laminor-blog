@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 
 $factory->define(Post::class, function ($faker) {
 	$faker = Faker::create('fa_IR');
+	$images = Storage::disk('public')->allFiles('images');
 
 	return [
 		'user_id' => 1,
@@ -16,7 +17,7 @@ $factory->define(Post::class, function ($faker) {
 		'lead' => $faker->realText(700),
 		'body' => $faker->realText(5000),
 		'created_at' => Carbon::yesterday('iran'),
-		// 'banner_path'=>'/storage/'.App\Image::find(9-$i)->path,
+		'banner_path'=>Arr::random($images),
 	];
 });
 
@@ -25,9 +26,9 @@ $factory->define(Comment::class, function ($faker) {
 
 	return [
 		'commentable_id' => 1,
-		'commentable_type' => 'Post',
+		'commentable_type' => 'App\Post',
 		'user_id' => 1,
 		'body' => $faker->realText(1000),
-		'created_at' => Carbon::today('iran')->addMinute(5),
+		'created_at' => Carbon::yesterday('iran')->addMinute(5),
 	];
 });

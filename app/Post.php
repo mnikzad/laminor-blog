@@ -8,6 +8,8 @@ class Post extends Model
 {
 	protected $table = 'posts';
 
+	protected $fillable=['title','lead','body','banner_path'];
+
 	public function comments()
 	{
 		return $this->morphMany('App\Comment', 'commentable');

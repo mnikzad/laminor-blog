@@ -8,6 +8,8 @@ class Comment extends Model
 {
 	protected $table = 'comments';
 
+	protected $fillable=['body','user_id'];
+
 	public function commentable()
 	{
 		return $this->morphTo();

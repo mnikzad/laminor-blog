@@ -31,10 +31,6 @@
 					برخی از <strong>کلمات کلیدی</strong>
 				</h3>
 				<ul class="Keywords">
-					{{-- @foreach ($footerData['tags'] as $tag)
-					<li style="white-space: nowrap">
-						<a href="?tag='.$tag['id']}}">{{$tag['name']}}</a></li>
-					@endforeach --}}
 				</ul>
 			</div>
 		</div>
@@ -51,7 +47,7 @@
 				<ul class="list-inline small">
 					<li><a href="">درباره ما</a></li>
 					<li class="footer-menu-divider"><i class="fa fa-circle-o"></i></li>
-					<li><a href=">شرایط استفاده</a></li>
+					<li><a href="">شرایط استفاده</a></li>
 					<li class="footer-menu-divider"><i class="fa fa-circle-o"></i></li>
 					<li><a href="" class="scroll-nav">تماس با ما</a></li>
 
