@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator; // Added for pagination
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,5 +33,7 @@ class AppServiceProvider extends ServiceProvider
 			['components.admin_right_sidebar', 'components.admin_top_bar'],
 			'App\Http\View\Composers\AdminComponentsComposer'
 		);
+
+		Paginator::useBootstrap(); // Added for pagination
 	}
 }
